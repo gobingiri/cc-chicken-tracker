@@ -36,8 +36,8 @@ function App() {
     );
   }
 
-  // Find or create today's log
-  let todayLog = logs.find(l => l.date === todayDate);
+  // Find or create today's log (using findLast to avoid broken duplicates)
+  let todayLog = logs.findLast ? logs.findLast(l => l.date === todayDate) : [...logs].reverse().find(l => l.date === todayDate);
   if (!todayLog && logs.length > 0) {
     todayLog = getEmptyLog(todayDate);
   }
@@ -45,7 +45,8 @@ function App() {
   const handleUpdateLog = (updatedFields) => {
     let specificLog = {};
     setLogs(prev => {
-      const existingIdx = prev.findIndex(l => l.date === todayDate);
+      // Find the last index to update the most recent entry
+      const existingIdx = prev.findLastIndex ? prev.findLastIndex(l => l.date === todayDate) : prev.map(l => l.date).lastIndexOf(todayDate);
       let newLogs = [...prev];
       if (existingIdx >= 0) {
         specificLog = { ...newLogs[existingIdx], ...updatedFields };
