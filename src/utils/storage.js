@@ -9,7 +9,15 @@ export const loadData = async () => {
     const data = await response.json();
     
     // Fallbacks if sheet is newly setup and empty
-    const logs = data.logs && data.logs.length > 0 ? data.logs : initialLogs;
+    let logs = data.logs && data.logs.length > 0 ? data.logs : initialLogs;
+    
+    // Google Sheets returns dates as ISO strings (e.g. "2026-06-18T04:00:00.000Z")
+    // We need to strip the time so it matches our local format "2026-06-18"
+    logs = logs.map(l => ({
+      ...l,
+      date: typeof l.date === 'string' ? l.date.split('T')[0] : l.date
+    }));
+
     const pars = data.pars && Object.keys(data.pars).length > 0 ? data.pars : defaultPars;
     
     return { logs, pars };
