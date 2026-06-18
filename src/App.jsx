@@ -5,8 +5,7 @@ import LogCountsView from './components/LogCountsView';
 import ManagerSettingsView from './components/ManagerSettingsView';
 import PrepAndDeliveryView from './components/PrepAndDeliveryView';
 import ReportsView from './components/ReportsView';
-import { loadLogs, saveLogs, loadPars, savePars } from './utils/storage';
-import { getEmptyLog } from './data/initialData';
+import { loadData, saveLog, savePars, getEmptyLog } from './utils/storage';
 import logo from './assets/logo.png';
 
 function App() {
@@ -15,12 +14,27 @@ function App() {
   const [logs, setLogs] = useState([]);
   const [pars, setPars] = useState({});
   const [todayDate, setTodayDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load initial data
+  // Load initial data asynchronously from Google Sheets
   useEffect(() => {
-    setLogs(loadLogs());
-    setPars(loadPars());
+    const initData = async () => {
+      const data = await loadData();
+      setLogs(data.logs);
+      setPars(data.pars);
+      setIsLoading(false);
+    };
+    initData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="loading-screen" style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#0f0f11', color: '#fff'}}>
+        <img src={logo} alt="Loading" className="logo-img" style={{marginBottom: '2rem', animation: 'pulse 2s infinite'}} />
+        <h2>Syncing with Google Sheets...</h2>
+      </div>
+    );
+  }
 
   // Find or create today's log
   let todayLog = logs.find(l => l.date === todayDate);
@@ -29,25 +43,30 @@ function App() {
   }
 
   const handleUpdateLog = (updatedFields) => {
+    let specificLog = {};
     setLogs(prev => {
       const existingIdx = prev.findIndex(l => l.date === todayDate);
       let newLogs = [...prev];
       if (existingIdx >= 0) {
-        newLogs[existingIdx] = { ...newLogs[existingIdx], ...updatedFields };
+        specificLog = { ...newLogs[existingIdx], ...updatedFields };
+        newLogs[existingIdx] = specificLog;
       } else {
-        newLogs.push({ ...getEmptyLog(todayDate), ...updatedFields });
+        specificLog = { ...getEmptyLog(todayDate), ...updatedFields };
+        newLogs.push(specificLog);
       }
-      saveLogs(newLogs);
       return newLogs;
     });
+    
+    // Save only the updated log object asynchronously
+    if (Object.keys(specificLog).length > 0) {
+      saveLog(specificLog);
+    }
   };
 
   const handleUpdatePars = (newPars) => {
     setPars(newPars);
     savePars(newPars);
   };
-
-  if (logs.length === 0) return null; // Wait for load
 
   return (
     <div className="dashboard">
