@@ -35,7 +35,7 @@ function ManagerSettingsView({ pars, onUpdatePars }) {
       </header>
 
       <div className="form-container">
-        <p className="form-description">Set the target par levels (in half pans) for each chicken type.</p>
+        <p className="form-description">Set the target par levels for each chicken type.</p>
         <form onSubmit={handleSubmit}>
           <div className="settings-grid">
             {Object.keys(labels).map((key) => (

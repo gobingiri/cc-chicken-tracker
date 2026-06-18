@@ -155,10 +155,10 @@ function ReportsView({ logs, onDeleteLog }) {
                 <th style={{width: '40px'}}></th>
                 <th>Date</th>
                 <th>Logged By</th>
-                <th colSpan="6" className="th-group group-eod">End of Day (Half Pans)</th>
+                <th colSpan="6" className="th-group group-eod">End of Day</th>
                 <th colSpan="2" className="th-group group-del">Delivery</th>
-                <th colSpan="4" className="th-group group-prep">Prep (Half Pans)</th>
-                <th colSpan="4" className="th-group group-waste">Waste (Half Pans)</th>
+                <th colSpan="4" className="th-group group-prep">Prep</th>
+                <th colSpan="4" className="th-group group-waste">Waste</th>
                 <th colSpan="3" className="th-group group-oil">Oil Changes</th>
               </tr>
               <tr className="sub-header">
@@ -166,13 +166,13 @@ function ReportsView({ logs, onDeleteLog }) {
                 <th></th>
                 <th></th>
                 {/* EoD */}
-                <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th><th>Thaw</th><th>Boxed</th>
+                <th>Sammy</th><th>OG</th><th>Grilled (Bags)</th><th>Tenders</th><th>Thaw</th><th>Boxed</th>
                 {/* Delivery */}
                 <th>Dark (lbs)</th><th>Tenders (boxes)</th>
                 {/* Prep */}
-                <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th>
+                <th>Sammy</th><th>OG</th><th>Grilled (Bags)</th><th>Tenders</th>
                 {/* Waste */}
-                <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th>
+                <th>Sammy</th><th>OG</th><th>Grilled (Bags)</th><th>Tenders</th>
                 {/* Oil */}
                 <th>Fries</th><th>Left</th><th>Right</th>
               </tr>

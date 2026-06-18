@@ -2,10 +2,10 @@ import React from 'react';
 
 function DashboardView({ todayLog, pars }) {
   const items = [
-    { key: 'sammy', name: 'Sandwich Pieces' },
-    { key: 'og', name: 'OG Pieces' },
-    { key: 'grilled', name: 'Grilled' },
-    { key: 'tenders', name: 'Tenders' }
+    { key: 'sammy', name: 'Sandwich Pieces', unit: 'pans' },
+    { key: 'og', name: 'OG Pieces', unit: 'pans' },
+    { key: 'grilled', name: 'Grilled', unit: 'bags' },
+    { key: 'tenders', name: 'Tenders', unit: 'pans' }
   ];
 
   return (
@@ -35,7 +35,7 @@ function DashboardView({ todayLog, pars }) {
           return (
             <div className={`stat-card ${isLow ? 'card-warning' : ''}`} key={item.key}>
               <div className="stat-title">{item.name}</div>
-              <div className="stat-value">{currentCount} <span className="unit">pans</span></div>
+              <div className="stat-value">{currentCount} <span className="unit">{item.unit}</span></div>
               
               <div className="stat-details">
                 <div className="detail-row">
@@ -54,7 +54,7 @@ function DashboardView({ todayLog, pars }) {
               
               <div className={`stat-trend ${needed > 0 ? 'trend-down' : 'trend-up'}`}>
                 {needed > 0 
-                  ? `Need ${needed} pans to meet par` 
+                  ? `Need ${needed} ${item.unit} to meet par` 
                   : `Fully stocked (above par by ${surplus})`}
               </div>
             </div>
@@ -76,7 +76,7 @@ function DashboardView({ todayLog, pars }) {
                 if (needed === 0) return null;
                 return (
                   <li key={item.key}>
-                    <strong>{needed} pans</strong> of {item.name}
+                    <strong>{needed} {item.unit}</strong> of {item.name}
                   </li>
                 );
               })}

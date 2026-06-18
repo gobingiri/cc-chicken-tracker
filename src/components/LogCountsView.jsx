@@ -64,7 +64,7 @@ function LogCountsView({ todayLog, onUpdateLog }) {
         <form onSubmit={handleSubmit}>
           
           <div className="form-section">
-            <h3>End of Day Inventory (Half Pans)</h3>
+            <h3>End of Day Inventory (Pans / Bags)</h3>
             <div className="input-group-row">
               {Object.keys(eodLabels).map(key => (
                 <div className="input-group" key={`eod-${key}`}>
@@ -81,7 +81,7 @@ function LogCountsView({ todayLog, onUpdateLog }) {
           </div>
 
           <div className="form-section">
-            <h3>Waste / Thrown (Half Pans)</h3>
+            <h3>Waste / Thrown (Pans / Bags)</h3>
             <div className="input-group-row">
               {Object.keys(wasteLabels).map(key => (
                 <div className="input-group" key={`waste-${key}`}>

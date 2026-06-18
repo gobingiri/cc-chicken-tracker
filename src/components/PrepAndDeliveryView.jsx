@@ -60,7 +60,7 @@ function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
           </div>
 
           <div className="form-section">
-            <h3>Daily Prep (Half Pans)</h3>
+            <h3>Daily Prep (Pans / Bags)</h3>
             <div className="input-group-row">
               {Object.keys(localLog.prep).map(type => (
                 <div className="input-group" key={type}>
