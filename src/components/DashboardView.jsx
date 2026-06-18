@@ -23,12 +23,13 @@ function DashboardView({ todayLog, pars }) {
 
       <section className="stats-grid">
         {items.map(item => {
-          const currentCount = Number(todayLog.eod[item.key]) || 0;
+          const currentCount = Number(Number(todayLog.eod[item.key] || 0).toFixed(2));
           const par = Number(pars[item.key]) || 0;
-          const waste = Number(todayLog.waste[item.key]) || 0;
-          const prepped = Number(todayLog.prep[item.key]) || 0;
+          const waste = Number(Number(todayLog.waste[item.key] || 0).toFixed(2));
+          const prepped = Number(Number(todayLog.prep[item.key] || 0).toFixed(2));
           
-          const needed = Math.max(0, par - currentCount);
+          const needed = Math.round(Math.max(0, par - currentCount));
+          const surplus = Math.round(currentCount - par);
           const isLow = currentCount < par * 0.5;
 
           return (
@@ -54,7 +55,7 @@ function DashboardView({ todayLog, pars }) {
               <div className={`stat-trend ${needed > 0 ? 'trend-down' : 'trend-up'}`}>
                 {needed > 0 
                   ? `Need ${needed} pans to meet par` 
-                  : `Fully stocked (above par by ${currentCount - par})`}
+                  : `Fully stocked (above par by ${surplus})`}
               </div>
             </div>
           );
@@ -69,9 +70,9 @@ function DashboardView({ todayLog, pars }) {
             <p>Based on current par levels, here is what needs to be prepped or ordered today:</p>
             <ul className="action-list">
               {items.map(item => {
-                const currentCount = Number(todayLog.eod[item.key]) || 0;
+                const currentCount = Number(Number(todayLog.eod[item.key] || 0).toFixed(2));
                 const par = Number(pars[item.key]) || 0;
-                const needed = Math.max(0, par - currentCount);
+                const needed = Math.round(Math.max(0, par - currentCount));
                 if (needed === 0) return null;
                 return (
                   <li key={item.key}>
