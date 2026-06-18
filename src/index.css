@@ -298,31 +298,63 @@ body {
   font-weight: 500;
 }
 
-.stepper-input {
+.custom-stepper {
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--card-border);
   border-radius: 8px;
   overflow: hidden;
+  height: 48px; /* Slightly taller for easy tapping */
 }
 
-.stepper-input input {
+.custom-stepper .stepper-btn {
+  background: var(--card-bg);
+  border: none;
+  color: var(--text-main);
+  font-size: 1.75rem; /* Larger font for + and - */
+  font-weight: 500;
+  width: 50px; /* Wider button */
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.custom-stepper .stepper-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.custom-stepper .stepper-btn:active {
+  background: var(--gradient-hot);
+}
+
+.custom-stepper input {
   flex: 1;
   background: transparent;
   border: none;
+  border-left: 1px solid var(--card-border);
+  border-right: 1px solid var(--card-border);
   color: var(--text-main);
   text-align: center;
+  font-family: 'Inter', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
-  padding: 0.75rem;
+  height: 100%;
   width: 100%;
-  appearance: none;
-  -moz-appearance: textfield;
+  padding: 0;
 }
 
-.stepper-input input::-webkit-outer-spin-button,
-.stepper-input input::-webkit-inner-spin-button {
+.custom-stepper input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Hide default arrows for custom stepper */
+.custom-stepper input::-webkit-outer-spin-button,
+.custom-stepper input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
