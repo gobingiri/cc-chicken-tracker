@@ -1,7 +1,7 @@
 import { defaultPars, initialLogs } from '../data/initialData';
 
 export const loadLogs = () => {
-  const stored = localStorage.getItem('cc_chicken_logs');
+  const stored = localStorage.getItem('cc_chicken_logs_v2');
   if (stored) {
     try {
       return JSON.parse(stored);
@@ -13,7 +13,7 @@ export const loadLogs = () => {
 };
 
 export const saveLogs = (logs) => {
-  localStorage.setItem('cc_chicken_logs', JSON.stringify(logs));
+  localStorage.setItem('cc_chicken_logs_v2', JSON.stringify(logs));
 };
 
 export const loadPars = () => {
