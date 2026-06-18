@@ -1,6 +1,6 @@
 import { defaultPars, initialLogs } from '../data/initialData';
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTV0d_pr0bFgZqmFDsPgSrz9B6Vsn82CsSk8KCDFTCyW6tqz74FTUScjjjnFgoAZWYkQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznGVkxPbzIybWR6g5KtdIpd-6Mpb9BZu0_E3CH2TS-4_vG5UK-GF7j_rv1qeEo9rceyQ/exec';
 
 // If the sheet is empty, we fall back to initial data.
 export const loadData = async () => {
