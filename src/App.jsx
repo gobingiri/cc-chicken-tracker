@@ -37,11 +37,15 @@ function App() {
     );
   }
 
-  // Get today's log or create an empty one
+  // Get today's log or create an empty one for data entry
   let todayLog = logs.findLast ? logs.findLast(l => l.date === todayDate) : logs.slice().reverse().find(l => l.date === todayDate);
   if (!todayLog) {
     todayLog = getEmptyLog(todayDate);
   }
+
+  // Get the most recent chronological log for the dashboard display
+  const sortedLogs = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const latestLog = sortedLogs.length > 0 ? sortedLogs[0] : todayLog;
 
   const handleUpdateLog = (updatedFields) => {
     let specificLog = {};
@@ -117,7 +121,7 @@ function App() {
       </aside>
 
       <main className="main-content">
-        {activeTab === 'dashboard' && <DashboardView todayLog={todayLog} pars={pars} />}
+        {activeTab === 'dashboard' && <DashboardView todayLog={latestLog} pars={pars} />}
         {activeTab === 'prep' && <PrepAndDeliveryView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
         {activeTab === 'counts' && <LogCountsView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
         {activeTab === 'reports' && <ReportsView logs={logs} onDeleteLog={handleDeleteLog} />}

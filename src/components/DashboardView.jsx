@@ -10,8 +10,11 @@ function DashboardView({ todayLog, pars }) {
 
   return (
     <div className="view-container">
-      <header className="header">
-        <h1>Dashboard Overview</h1>
+      <header className="header" style={{alignItems: 'flex-start', marginBottom: '2rem'}}>
+        <div>
+          <h1 style={{marginBottom: '0.5rem'}}>Dashboard Overview</h1>
+          <p style={{color: 'var(--text-muted)', fontSize: '1rem'}}>As of {todayLog.date}</p>
+        </div>
         <div className="user-profile">
           <span className="user-name">Manager</span>
           <div className="avatar">M</div>
