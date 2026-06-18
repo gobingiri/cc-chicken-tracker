@@ -7,6 +7,7 @@ import PrepAndDeliveryView from './components/PrepAndDeliveryView';
 import ReportsView from './components/ReportsView';
 import { loadLogs, saveLogs, loadPars, savePars } from './utils/storage';
 import { getEmptyLog } from './data/initialData';
+import logo from './assets/logo.png';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -52,7 +53,7 @@ function App() {
     <div className="dashboard">
       <aside className="sidebar">
         <div className="brand">
-          <img src="/cc-chicken-tracker/logo.png" alt="Chen Chen's Logo" className="logo-img" onError={(e) => { e.target.onerror = null; e.target.src = './assets/logo.png'; }} />
+          <img src={logo} alt="Chen Chen's Logo" className="logo-img" />
           <div className="brand-text">Chen Chen's<br/>Tracker</div>
         </div>
         <ul className="nav-links">
