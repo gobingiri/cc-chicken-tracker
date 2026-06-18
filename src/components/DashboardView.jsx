@@ -1,7 +1,12 @@
 import React from 'react';
 
-function DashboardView({ inventory }) {
-  const items = Object.values(inventory);
+function DashboardView({ todayLog, pars }) {
+  const items = [
+    { key: 'sammy', name: 'Sandwich Pieces' },
+    { key: 'og', name: 'OG Pieces' },
+    { key: 'grilled', name: 'Grilled' },
+    { key: 'tenders', name: 'Tenders' }
+  ];
 
   return (
     <div className="view-container">
@@ -15,29 +20,38 @@ function DashboardView({ inventory }) {
 
       <section className="stats-grid">
         {items.map(item => {
-          const needed = Math.max(0, item.parLevel - item.currentCount);
-          const isLow = item.currentCount < item.parLevel * 0.5;
+          const currentCount = Number(todayLog.eod[item.key]) || 0;
+          const par = Number(pars[item.key]) || 0;
+          const waste = Number(todayLog.waste[item.key]) || 0;
+          const prepped = Number(todayLog.prep[item.key]) || 0;
+          
+          const needed = Math.max(0, par - currentCount);
+          const isLow = currentCount < par * 0.5;
 
           return (
-            <div className={`stat-card ${isLow ? 'card-warning' : ''}`} key={item.name}>
+            <div className={`stat-card ${isLow ? 'card-warning' : ''}`} key={item.key}>
               <div className="stat-title">{item.name}</div>
-              <div className="stat-value">{item.currentCount} <span className="unit">pans</span></div>
+              <div className="stat-value">{currentCount} <span className="unit">pans</span></div>
               
               <div className="stat-details">
                 <div className="detail-row">
                   <span>Par Level:</span>
-                  <span>{item.parLevel}</span>
+                  <span>{par}</span>
+                </div>
+                <div className="detail-row">
+                  <span>Prepped Today:</span>
+                  <span style={{color: '#34c759'}}>{prepped}</span>
                 </div>
                 <div className="detail-row">
                   <span>Waste Logged:</span>
-                  <span className="text-red">{item.wasteCount}</span>
+                  <span className="text-red">{waste}</span>
                 </div>
               </div>
               
               <div className={`stat-trend ${needed > 0 ? 'trend-down' : 'trend-up'}`}>
                 {needed > 0 
                   ? `Need ${needed} pans to meet par` 
-                  : `Fully stocked (above par by ${item.currentCount - item.parLevel})`}
+                  : `Fully stocked (above par by ${currentCount - par})`}
               </div>
             </div>
           );
@@ -52,15 +66,21 @@ function DashboardView({ inventory }) {
             <p>Based on current par levels, here is what needs to be prepped or ordered today:</p>
             <ul className="action-list">
               {items.map(item => {
-                const needed = Math.max(0, item.parLevel - item.currentCount);
+                const currentCount = Number(todayLog.eod[item.key]) || 0;
+                const par = Number(pars[item.key]) || 0;
+                const needed = Math.max(0, par - currentCount);
                 if (needed === 0) return null;
                 return (
-                  <li key={item.name}>
+                  <li key={item.key}>
                     <strong>{needed} pans</strong> of {item.name}
                   </li>
                 );
               })}
-              {items.every(item => item.parLevel - item.currentCount <= 0) && (
+              {items.every(item => {
+                const c = Number(todayLog.eod[item.key]) || 0;
+                const p = Number(pars[item.key]) || 0;
+                return p - c <= 0;
+              }) && (
                 <li>All items meet or exceed par levels!</li>
               )}
             </ul>

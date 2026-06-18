@@ -408,6 +408,109 @@ body {
 
 .mt-2 { margin-top: 2rem; }
 
+/* Oil Toggles */
+.oil-toggles {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.75rem;
+}
+
+.toggle-label input {
+  display: none;
+}
+
+.toggle-slider {
+  width: 44px;
+  height: 24px;
+  background-color: var(--card-border);
+  border-radius: 34px;
+  position: relative;
+  transition: 0.2s;
+}
+
+.toggle-slider:before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-main);
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.toggle-label input:checked + .toggle-slider {
+  background: var(--gradient-hot);
+}
+
+.toggle-label input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.toggle-text {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.toggle-label input:checked ~ .toggle-text {
+  color: var(--text-main);
+}
+
+/* Reports Table */
+.table-responsive {
+  overflow-x: auto;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+}
+
+.reports-table th, .reports-table td {
+  padding: 0.75rem 0.5rem;
+  text-align: right;
+  border-bottom: 1px solid var(--card-border);
+  font-size: 0.875rem;
+}
+
+.reports-table th:first-child, .reports-table td:first-child {
+  text-align: left;
+}
+
+.reports-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.th-group {
+  text-align: center !important;
+  border-bottom: 2px solid var(--card-border) !important;
+}
+.group-eod { color: #5ac8fa !important; }
+.group-del { color: #ffcc00 !important; }
+.group-prep { color: #34c759 !important; }
+.group-waste { color: #ff3b30 !important; }
+.group-oil { color: #ff9500 !important; }
+
+.sub-header th {
+  border-bottom: 2px solid var(--card-border);
+  font-size: 0.8rem;
+}
+
+.text-center { text-align: center !important; }
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .dashboard {

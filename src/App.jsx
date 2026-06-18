@@ -1,70 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import DashboardView from './components/DashboardView';
 import LogCountsView from './components/LogCountsView';
 import ManagerSettingsView from './components/ManagerSettingsView';
-import logo from './assets/logo.png';
+import PrepAndDeliveryView from './components/PrepAndDeliveryView';
+import ReportsView from './components/ReportsView';
+import { loadLogs, saveLogs, loadPars, savePars } from './utils/storage';
+import { getEmptyLog } from './data/initialData';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   
-  const [inventory, setInventory] = useState({
-    sandwich: { name: 'Sandwich Pieces', currentCount: 0, wasteCount: 0, parLevel: 10 },
-    og: { name: 'OG Pieces', currentCount: 0, wasteCount: 0, parLevel: 8 },
-    tenders: { name: 'Tenders', currentCount: 0, wasteCount: 0, parLevel: 5 }
-  });
+  const [logs, setLogs] = useState([]);
+  const [pars, setPars] = useState({});
+  const [todayDate, setTodayDate] = useState(new Date().toISOString().split('T')[0]);
 
-  const handleUpdateCounts = (newCounts) => {
-    setInventory(prev => {
-      const next = { ...prev };
-      Object.keys(newCounts).forEach(key => {
-        next[key] = {
-          ...next[key],
-          currentCount: newCounts[key].currentCount,
-          wasteCount: newCounts[key].wasteCount
-        };
-      });
-      return next;
+  // Load initial data
+  useEffect(() => {
+    setLogs(loadLogs());
+    setPars(loadPars());
+  }, []);
+
+  // Find or create today's log
+  let todayLog = logs.find(l => l.date === todayDate);
+  if (!todayLog && logs.length > 0) {
+    todayLog = getEmptyLog(todayDate);
+  }
+
+  const handleUpdateLog = (updatedFields) => {
+    setLogs(prev => {
+      const existingIdx = prev.findIndex(l => l.date === todayDate);
+      let newLogs = [...prev];
+      if (existingIdx >= 0) {
+        newLogs[existingIdx] = { ...newLogs[existingIdx], ...updatedFields };
+      } else {
+        newLogs.push({ ...getEmptyLog(todayDate), ...updatedFields });
+      }
+      saveLogs(newLogs);
+      return newLogs;
     });
   };
 
   const handleUpdatePars = (newPars) => {
-    setInventory(prev => {
-      const next = { ...prev };
-      Object.keys(newPars).forEach(key => {
-        next[key] = {
-          ...next[key],
-          parLevel: newPars[key]
-        };
-      });
-      return next;
-    });
+    setPars(newPars);
+    savePars(newPars);
   };
+
+  if (logs.length === 0) return null; // Wait for load
 
   return (
     <div className="dashboard">
       <aside className="sidebar">
         <div className="brand">
-          <img src={logo} alt="Chen Chen's Logo" className="logo-img" onError={(e) => e.target.style.display='none'} />
+          <img src="/cc-chicken-tracker/logo.png" alt="Chen Chen's Logo" className="logo-img" onError={(e) => { e.target.onerror = null; e.target.src = './assets/logo.png'; }} />
           <div className="brand-text">Chen Chen's<br/>Tracker</div>
         </div>
         <ul className="nav-links">
           <li className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
             Dashboard
           </li>
-          <li className={`nav-item ${activeTab === 'log-counts' ? 'active' : ''}`} onClick={() => setActiveTab('log-counts')}>
-            Log Counts (Staff)
+          <li className={`nav-item ${activeTab === 'prep' ? 'active' : ''}`} onClick={() => setActiveTab('prep')}>
+            Prep & Delivery
           </li>
-          <li className={`nav-item ${activeTab === 'manager-settings' ? 'active' : ''}`} onClick={() => setActiveTab('manager-settings')}>
+          <li className={`nav-item ${activeTab === 'counts' ? 'active' : ''}`} onClick={() => setActiveTab('counts')}>
+            End of Day & Waste
+          </li>
+          <li className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
+            Reports
+          </li>
+          <li className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
             Manager Settings
           </li>
         </ul>
       </aside>
 
       <main className="main-content">
-        {activeTab === 'dashboard' && <DashboardView inventory={inventory} />}
-        {activeTab === 'log-counts' && <LogCountsView inventory={inventory} onUpdateCounts={handleUpdateCounts} />}
-        {activeTab === 'manager-settings' && <ManagerSettingsView inventory={inventory} onUpdatePars={handleUpdatePars} />}
+        {activeTab === 'dashboard' && <DashboardView todayLog={todayLog} pars={pars} />}
+        {activeTab === 'prep' && <PrepAndDeliveryView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
+        {activeTab === 'counts' && <LogCountsView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
+        {activeTab === 'reports' && <ReportsView logs={logs} />}
+        {activeTab === 'settings' && <ManagerSettingsView pars={pars} onUpdatePars={handleUpdatePars} />}
       </main>
     </div>
   );

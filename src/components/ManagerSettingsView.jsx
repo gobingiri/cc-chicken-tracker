@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 
-function ManagerSettingsView({ inventory, onUpdatePars }) {
-  const [localPars, setLocalPars] = useState(() => {
-    const pars = {};
-    Object.keys(inventory).forEach(key => {
-      pars[key] = inventory[key].parLevel || 0;
-    });
-    return pars;
-  });
+function ManagerSettingsView({ pars, onUpdatePars }) {
+  const [localPars, setLocalPars] = useState({ ...pars });
 
   const handleChange = (key, value) => {
     const num = parseInt(value, 10);
@@ -21,6 +15,13 @@ function ManagerSettingsView({ inventory, onUpdatePars }) {
     e.preventDefault();
     onUpdatePars(localPars);
     alert('Par levels successfully updated!');
+  };
+
+  const labels = {
+    sammy: 'Sandwich Pieces',
+    og: 'OG Pieces',
+    grilled: 'Grilled',
+    tenders: 'Tenders'
   };
 
   return (
@@ -37,9 +38,9 @@ function ManagerSettingsView({ inventory, onUpdatePars }) {
         <p className="form-description">Set the target par levels (in half pans) for each chicken type.</p>
         <form onSubmit={handleSubmit}>
           <div className="settings-grid">
-            {Object.entries(inventory).map(([key, item]) => (
+            {Object.keys(labels).map((key) => (
               <div className="settings-card" key={key}>
-                <h3>{item.name}</h3>
+                <h3>{labels[key]}</h3>
                 <div className="input-group">
                   <label>Target Par Level</label>
                   <input 

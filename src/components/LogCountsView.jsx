@@ -1,94 +1,130 @@
 import React, { useState } from 'react';
 
-function LogCountsView({ inventory, onUpdateCounts }) {
-  const [localCounts, setLocalCounts] = useState(() => {
-    const counts = {};
-    Object.keys(inventory).forEach(key => {
-      counts[key] = {
-        currentCount: inventory[key].currentCount || 0,
-        wasteCount: inventory[key].wasteCount || 0
-      };
-    });
-    return counts;
-  });
+function LogCountsView({ todayLog, onUpdateLog }) {
+  const [localLog, setLocalLog] = useState(() => ({
+    eod: { ...todayLog.eod },
+    waste: { ...todayLog.waste },
+    oil: { ...todayLog.oil }
+  }));
 
-  const handleChange = (key, field, value) => {
-    const num = parseInt(value, 10);
-    setLocalCounts(prev => ({
+  const handleChange = (section, field, value) => {
+    const num = parseFloat(value);
+    setLocalLog(prev => ({
       ...prev,
-      [key]: {
-        ...prev[key],
+      [section]: {
+        ...prev[section],
         [field]: isNaN(num) ? '' : Math.max(0, num)
       }
     }));
   };
 
-  const handleStepper = (key, field, delta) => {
-    setLocalCounts(prev => {
-      const current = typeof prev[key][field] === 'number' ? prev[key][field] : 0;
-      return {
-        ...prev,
-        [key]: {
-          ...prev[key],
-          [field]: Math.max(0, current + delta)
-        }
-      };
-    });
+  const handleToggle = (field) => {
+    setLocalLog(prev => ({
+      ...prev,
+      oil: {
+        ...prev.oil,
+        [field]: !prev.oil[field]
+      }
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUpdateCounts(localCounts);
+    onUpdateLog({
+      eod: localLog.eod,
+      waste: localLog.waste,
+      oil: localLog.oil
+    });
     alert('Counts successfully logged!');
+  };
+
+  const eodLabels = {
+    sammy: 'Sandwich Pieces',
+    og: 'OG Pieces',
+    grilled: 'Grilled',
+    tenders: 'Tenders',
+    thawingTenders: 'Thawing Tenders',
+    boxedTenders: 'Boxed Tenders'
+  };
+
+  const wasteLabels = {
+    sammy: 'Sandwich Pieces',
+    og: 'OG Pieces',
+    grilled: 'Grilled',
+    tenders: 'Tenders'
   };
 
   return (
     <div className="view-container">
       <header className="header">
-        <h1>Log Counts (Staff)</h1>
-        <div className="user-profile">
-          <span className="user-name">Staff</span>
-          <div className="avatar">S</div>
-        </div>
+        <h1>Log Counts & Waste</h1>
       </header>
 
       <div className="form-container">
-        <p className="form-description">Enter the current number of half pans on hand and any waste.</p>
         <form onSubmit={handleSubmit}>
-          {Object.entries(inventory).map(([key, item]) => (
-            <div className="form-section" key={key}>
-              <h3>{item.name}</h3>
-              <div className="input-group-row">
-                <div className="input-group">
-                  <label>Current Count (Half Pans)</label>
+          
+          <div className="form-section">
+            <h3>End of Day Inventory (Half Pans)</h3>
+            <div className="input-group-row">
+              {Object.keys(eodLabels).map(key => (
+                <div className="input-group" key={`eod-${key}`}>
+                  <label>{eodLabels[key]}</label>
                   <div className="stepper-input">
-                    <button type="button" className="btn-icon" onClick={() => handleStepper(key, 'currentCount', -1)}>-</button>
                     <input 
                       type="number" 
-                      value={localCounts[key].currentCount}
-                      onChange={(e) => handleChange(key, 'currentCount', e.target.value)}
+                      step="0.25"
+                      value={localLog.eod[key]}
+                      onChange={(e) => handleChange('eod', key, e.target.value)}
                       min="0"
                     />
-                    <button type="button" className="btn-icon" onClick={() => handleStepper(key, 'currentCount', 1)}>+</button>
                   </div>
                 </div>
-                
-                <div className="input-group">
-                  <label>Waste (Half Pans)</label>
-                  <div className="stepper-input">
-                    <button type="button" className="btn-icon danger" onClick={() => handleStepper(key, 'wasteCount', -1)}>-</button>
-                    <input 
-                      type="number" 
-                      value={localCounts[key].wasteCount}
-                      onChange={(e) => handleChange(key, 'wasteCount', e.target.value)}
-                      min="0"
-                    />
-                    <button type="button" className="btn-icon danger" onClick={() => handleStepper(key, 'wasteCount', 1)}>+</button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <div className="form-section">
+            <h3>Waste / Thrown (Half Pans)</h3>
+            <div className="input-group-row">
+              {Object.keys(wasteLabels).map(key => (
+                <div className="input-group" key={`waste-${key}`}>
+                  <label>{wasteLabels[key]}</label>
+                  <div className="stepper-input">
+                    <input 
+                      type="number" 
+                      step="0.25"
+                      value={localLog.waste[key]}
+                      onChange={(e) => handleChange('waste', key, e.target.value)}
+                      min="0"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-section">
+            <h3>Fryer Oil Changes</h3>
+            <p className="form-description" style={{marginBottom: '1rem'}}>Toggle if the oil was changed today.</p>
+            <div className="oil-toggles">
+              <label className="toggle-label">
+                <input type="checkbox" checked={localLog.oil.fries} onChange={() => handleToggle('fries')} />
+                <span className="toggle-slider"></span>
+                <span className="toggle-text">Fries</span>
+              </label>
+              <label className="toggle-label">
+                <input type="checkbox" checked={localLog.oil.leftChicken} onChange={() => handleToggle('leftChicken')} />
+                <span className="toggle-slider"></span>
+                <span className="toggle-text">Left Chicken</span>
+              </label>
+              <label className="toggle-label">
+                <input type="checkbox" checked={localLog.oil.rightChicken} onChange={() => handleToggle('rightChicken')} />
+                <span className="toggle-slider"></span>
+                <span className="toggle-text">Right Chicken</span>
+              </label>
+            </div>
+          </div>
+
           <div className="form-actions">
             <button type="submit" className="btn btn-large">Save Counts</button>
           </div>
