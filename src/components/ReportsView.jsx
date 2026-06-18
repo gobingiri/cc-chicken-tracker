@@ -1,7 +1,10 @@
 import React, { useState, useMemo } from 'react';
 
 function ReportsView({ logs, onDeleteLog }) {
-  const [selectedMonth, setSelectedMonth] = useState('all');
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
 
   // Parse available months
   const availableMonths = useMemo(() => {
@@ -130,12 +133,12 @@ function ReportsView({ logs, onDeleteLog }) {
         </div>
         <div className="stat-card">
           <div className="stat-title">Total Prepped</div>
-          <div className="stat-value">{summaries.prepTotal} <span className="unit">pans</span></div>
+          <div className="stat-value">{Number(summaries.prepTotal.toFixed(2))} <span className="unit">pans</span></div>
           <div className="stat-trend trend-up">All chicken types combined</div>
         </div>
         <div className="stat-card">
           <div className="stat-title">Total Waste</div>
-          <div className="stat-value" style={{color: '#ff3b30'}}>{summaries.wasteTotal} <span className="unit">pans</span></div>
+          <div className="stat-value" style={{color: '#ff3b30'}}>{Number(summaries.wasteTotal.toFixed(2))} <span className="unit">pans</span></div>
           <div className="stat-trend trend-down">All chicken types combined</div>
         </div>
       </section>
