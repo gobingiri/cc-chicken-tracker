@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 
-function ReportsView({ logs }) {
+function ReportsView({ logs, onDeleteLog }) {
   const [selectedMonth, setSelectedMonth] = useState('all');
 
   // Parse available months
@@ -149,6 +149,7 @@ function ReportsView({ logs }) {
           <table className="reports-table">
             <thead>
               <tr>
+                <th style={{width: '40px'}}></th>
                 <th>Date</th>
                 <th>Logged By</th>
                 <th colSpan="6" className="th-group group-eod">End of Day (Half Pans)</th>
@@ -158,6 +159,7 @@ function ReportsView({ logs }) {
                 <th colSpan="3" className="th-group group-oil">Oil Changes</th>
               </tr>
               <tr className="sub-header">
+                <th></th>
                 <th></th>
                 <th></th>
                 {/* EoD */}
@@ -175,6 +177,20 @@ function ReportsView({ logs }) {
             <tbody>
               {filteredLogs.map((log, i) => (
                 <tr key={i}>
+                  <td>
+                    <button 
+                      className="btn-icon danger" 
+                      style={{width: '30px', height: '30px', fontSize: '1rem', borderRadius: '4px', padding: 0}}
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to permanently delete the log for ${log.date}? This will also delete it from the Google Sheet.`)) {
+                          onDeleteLog(log.date);
+                        }
+                      }}
+                      title="Delete log"
+                    >
+                      🗑️
+                    </button>
+                  </td>
                   <td><strong>{log.date}</strong></td>
                   <td>{log.loggedBy || '-'}</td>
                   {/* EoD */}

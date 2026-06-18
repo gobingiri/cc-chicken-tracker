@@ -52,6 +52,23 @@ export const saveLog = async (log) => {
   }
 };
 
+export const deleteLog = async (date) => {
+  // Update local storage instantly for offline support
+  const storedLogs = JSON.parse(localStorage.getItem('cc_chicken_logs_v2') || '[]');
+  const newLogs = storedLogs.filter(l => l.date !== date);
+  localStorage.setItem('cc_chicken_logs_v2', JSON.stringify(newLogs));
+
+  // Push to Google Sheets
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'DELETE_LOG', date }),
+    });
+  } catch (e) {
+    console.error('Failed to delete log from Google Sheets', e);
+  }
+};
+
 export const savePars = async (pars) => {
   // Update local storage instantly
   localStorage.setItem('cc_chicken_pars', JSON.stringify(pars));

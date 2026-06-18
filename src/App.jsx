@@ -5,7 +5,7 @@ import LogCountsView from './components/LogCountsView';
 import ManagerSettingsView from './components/ManagerSettingsView';
 import PrepAndDeliveryView from './components/PrepAndDeliveryView';
 import ReportsView from './components/ReportsView';
-import { loadData, saveLog, savePars, getEmptyLog } from './utils/storage';
+import { loadData, saveLog, deleteLog, savePars, getEmptyLog } from './utils/storage';
 import logo from './assets/logo.png';
 
 function App() {
@@ -65,6 +65,11 @@ function App() {
     }
   };
 
+  const handleDeleteLog = (dateToDelete) => {
+    setLogs(prev => prev.filter(l => l.date !== dateToDelete));
+    deleteLog(dateToDelete);
+  };
+
   const handleUserChange = (e) => {
     const val = e.target.value;
     setLoggedUser(val);
@@ -116,7 +121,7 @@ function App() {
         {activeTab === 'dashboard' && <DashboardView todayLog={todayLog} pars={pars} />}
         {activeTab === 'prep' && <PrepAndDeliveryView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
         {activeTab === 'counts' && <LogCountsView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
-        {activeTab === 'reports' && <ReportsView logs={logs} />}
+        {activeTab === 'reports' && <ReportsView logs={logs} onDeleteLog={handleDeleteLog} />}
         {activeTab === 'settings' && <ManagerSettingsView pars={pars} onUpdatePars={handleUpdatePars} />}
       </main>
     </div>
