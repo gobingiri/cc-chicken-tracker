@@ -523,16 +523,24 @@ body {
 /* Reports Table */
 .table-responsive {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 65vh;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 1rem;
 }
 
 .reports-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 1200px;
+}
+
+.reports-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #151518; /* slightly lighter than bg for contrast, opaque */
 }
 
 .reports-table th, .reports-table td {
