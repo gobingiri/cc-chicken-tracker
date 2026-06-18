@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import StepperInput from './StepperInput';
 
 function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
   const [localLog, setLocalLog] = useState(() => ({
@@ -7,12 +8,11 @@ function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
   }));
 
   const handleChange = (section, field, value) => {
-    const num = parseFloat(value);
     setLocalLog(prev => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: isNaN(num) ? '' : Math.max(0, num)
+        [field]: value
       }
     }));
   };
@@ -30,41 +30,31 @@ function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
     <div className="view-container">
       <header className="header">
         <h1>Prep & Delivery Logs</h1>
-        <div className="user-profile">
-          <span className="user-name">Staff</span>
-          <div className="avatar">S</div>
-        </div>
       </header>
 
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           
           <div className="form-section">
-            <h3>Deliveries (Weight from Invoice in lbs)</h3>
+            <h3>Deliveries</h3>
             <div className="input-group-row">
               <div className="input-group">
                 <label>Dark Meat (lbs)</label>
-                <div className="stepper-input">
-                  <input 
-                    type="number" 
-                    step="0.01"
-                    value={localLog.delivery.dark}
-                    onChange={(e) => handleChange('delivery', 'dark', e.target.value)}
-                    min="0"
-                  />
-                </div>
+                <StepperInput 
+                  value={localLog.delivery.dark}
+                  onChange={(val) => handleChange('delivery', 'dark', val)}
+                  step={0.01}
+                  min={0}
+                />
               </div>
               <div className="input-group">
                 <label>Tenders (Boxes)</label>
-                <div className="stepper-input">
-                  <input 
-                    type="number" 
-                    step="0.01"
-                    value={localLog.delivery.tenders}
-                    onChange={(e) => handleChange('delivery', 'tenders', e.target.value)}
-                    min="0"
-                  />
-                </div>
+                <StepperInput 
+                  value={localLog.delivery.tenders}
+                  onChange={(val) => handleChange('delivery', 'tenders', val)}
+                  step={0.01}
+                  min={0}
+                />
               </div>
             </div>
           </div>
@@ -75,15 +65,12 @@ function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
               {Object.keys(localLog.prep).map(type => (
                 <div className="input-group" key={type}>
                   <label>{type.charAt(0).toUpperCase() + type.slice(1)}</label>
-                  <div className="stepper-input">
-                    <input 
-                      type="number" 
-                      step="0.25"
-                      value={localLog.prep[type]}
-                      onChange={(e) => handleChange('prep', type, e.target.value)}
-                      min="0"
-                    />
-                  </div>
+                  <StepperInput 
+                    value={localLog.prep[type]}
+                    onChange={(val) => handleChange('prep', type, val)}
+                    step={0.25}
+                    min={0}
+                  />
                 </div>
               ))}
             </div>

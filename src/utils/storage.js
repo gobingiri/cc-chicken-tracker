@@ -73,5 +73,6 @@ export const getEmptyLog = (date) => ({
   delivery: { dark: '', tenders: '' },
   prep: { sammy: '', og: '', grilled: '', tenders: '' },
   waste: { sammy: '', og: '', grilled: '', tenders: '' },
-  oil: { fries: false, leftChicken: false, rightChicken: false }
+  oil: { fries: false, leftChicken: false, rightChicken: false },
+  loggedBy: ''
 });

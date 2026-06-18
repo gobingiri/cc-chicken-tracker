@@ -54,6 +54,7 @@ function ReportsView({ logs }) {
   const exportToCSV = () => {
     const headers = [
       "Dates",
+      "Logged By",
       "EoD Sammy", "EoD OG", "EoD Grilled", "EoD Tenders", "Thawing Tenders", "Boxed Tenders",
       "Delivery Dark (lbs)", "Delivery Tenders (boxes)",
       "Prepped Sammy", "Prepped OG", "Prepped Grilled", "Prepped Tenders",
@@ -63,13 +64,13 @@ function ReportsView({ logs }) {
 
     const rows = filteredLogs.map(log => [
       log.date,
+      log.loggedBy || '',
       log.eod.sammy, log.eod.og, log.eod.grilled, log.eod.tenders, log.eod.thawingTenders, log.eod.boxedTenders,
       log.delivery.dark, log.delivery.tenders,
       log.prep.sammy, log.prep.og, log.prep.grilled, log.prep.tenders,
       log.waste.sammy, log.waste.og, log.waste.grilled, log.waste.tenders,
       log.oil.fries ? 'X' : '-', log.oil.leftChicken ? 'X' : '-', log.oil.rightChicken ? 'X' : '-'
     ]);
-
     const csvContent = "data:text/csv;charset=utf-8," 
       + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
 
@@ -149,6 +150,7 @@ function ReportsView({ logs }) {
             <thead>
               <tr>
                 <th>Date</th>
+                <th>Logged By</th>
                 <th colSpan="6" className="th-group group-eod">End of Day (Half Pans)</th>
                 <th colSpan="2" className="th-group group-del">Delivery</th>
                 <th colSpan="4" className="th-group group-prep">Prep (Half Pans)</th>
@@ -156,6 +158,7 @@ function ReportsView({ logs }) {
                 <th colSpan="3" className="th-group group-oil">Oil Changes</th>
               </tr>
               <tr className="sub-header">
+                <th></th>
                 <th></th>
                 {/* EoD */}
                 <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th><th>Thaw</th><th>Boxed</th>
@@ -173,6 +176,7 @@ function ReportsView({ logs }) {
               {filteredLogs.map((log, i) => (
                 <tr key={i}>
                   <td><strong>{log.date}</strong></td>
+                  <td>{log.loggedBy || '-'}</td>
                   {/* EoD */}
                   <td>{log.eod.sammy}</td><td>{log.eod.og}</td><td>{log.eod.grilled}</td><td>{log.eod.tenders}</td><td>{log.eod.thawingTenders}</td><td>{log.eod.boxedTenders}</td>
                   {/* Delivery */}

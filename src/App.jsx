@@ -10,6 +10,7 @@ import logo from './assets/logo.png';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [loggedUser, setLoggedUser] = useState(() => localStorage.getItem('cc_chicken_user') || '');
   
   const [logs, setLogs] = useState([]);
   const [pars, setPars] = useState({});
@@ -49,10 +50,10 @@ function App() {
       const existingIdx = prev.findLastIndex ? prev.findLastIndex(l => l.date === todayDate) : prev.map(l => l.date).lastIndexOf(todayDate);
       let newLogs = [...prev];
       if (existingIdx >= 0) {
-        specificLog = { ...newLogs[existingIdx], ...updatedFields };
+        specificLog = { ...newLogs[existingIdx], ...updatedFields, loggedBy: loggedUser };
         newLogs[existingIdx] = specificLog;
       } else {
-        specificLog = { ...getEmptyLog(todayDate), ...updatedFields };
+        specificLog = { ...getEmptyLog(todayDate), ...updatedFields, loggedBy: loggedUser };
         newLogs.push(specificLog);
       }
       return newLogs;
@@ -64,6 +65,12 @@ function App() {
     }
   };
 
+  const handleUserChange = (e) => {
+    const val = e.target.value;
+    setLoggedUser(val);
+    localStorage.setItem('cc_chicken_user', val);
+  };
+
   const handleUpdatePars = (newPars) => {
     setPars(newPars);
     savePars(newPars);
@@ -72,19 +79,29 @@ function App() {
   return (
     <div className="dashboard">
       <aside className="sidebar">
-        <div className="brand">
+        <div className="brand" style={{marginBottom: '1rem'}}>
           <img src={logo} alt="Chen Chen's Logo" className="logo-img" />
           <div className="brand-text">Chen Chen's<br/>Tracker</div>
+        </div>
+        <div className="user-profile" style={{marginBottom: '2rem'}}>
+          <input 
+            type="text" 
+            placeholder="Who is logging?" 
+            value={loggedUser}
+            onChange={handleUserChange}
+            className="big-input"
+            style={{padding: '0.5rem', width: '100%', fontSize: '0.9rem'}}
+          />
         </div>
         <ul className="nav-links">
           <li className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
             Dashboard
           </li>
-          <li className={`nav-item ${activeTab === 'prep' ? 'active' : ''}`} onClick={() => setActiveTab('prep')}>
-            Prep & Delivery
-          </li>
           <li className={`nav-item ${activeTab === 'counts' ? 'active' : ''}`} onClick={() => setActiveTab('counts')}>
             End of Day & Waste
+          </li>
+          <li className={`nav-item ${activeTab === 'prep' ? 'active' : ''}`} onClick={() => setActiveTab('prep')}>
+            Prep & Delivery
           </li>
           <li className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
             Reports

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import StepperInput from './StepperInput';
 
 function LogCountsView({ todayLog, onUpdateLog }) {
   const [localLog, setLocalLog] = useState(() => ({
@@ -8,12 +9,11 @@ function LogCountsView({ todayLog, onUpdateLog }) {
   }));
 
   const handleChange = (section, field, value) => {
-    const num = parseFloat(value);
     setLocalLog(prev => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: isNaN(num) ? '' : Math.max(0, num)
+        [field]: value
       }
     }));
   };
@@ -69,15 +69,12 @@ function LogCountsView({ todayLog, onUpdateLog }) {
               {Object.keys(eodLabels).map(key => (
                 <div className="input-group" key={`eod-${key}`}>
                   <label>{eodLabels[key]}</label>
-                  <div className="stepper-input">
-                    <input 
-                      type="number" 
-                      step="0.25"
-                      value={localLog.eod[key]}
-                      onChange={(e) => handleChange('eod', key, e.target.value)}
-                      min="0"
-                    />
-                  </div>
+                  <StepperInput 
+                    value={localLog.eod[key]}
+                    onChange={(val) => handleChange('eod', key, val)}
+                    step={0.25}
+                    min={0}
+                  />
                 </div>
               ))}
             </div>
@@ -89,15 +86,12 @@ function LogCountsView({ todayLog, onUpdateLog }) {
               {Object.keys(wasteLabels).map(key => (
                 <div className="input-group" key={`waste-${key}`}>
                   <label>{wasteLabels[key]}</label>
-                  <div className="stepper-input">
-                    <input 
-                      type="number" 
-                      step="0.25"
-                      value={localLog.waste[key]}
-                      onChange={(e) => handleChange('waste', key, e.target.value)}
-                      min="0"
-                    />
-                  </div>
+                  <StepperInput 
+                    value={localLog.waste[key]}
+                    onChange={(val) => handleChange('waste', key, val)}
+                    step={0.25}
+                    min={0}
+                  />
                 </div>
               ))}
             </div>
