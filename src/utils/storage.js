@@ -52,17 +52,17 @@ export const saveLog = async (log) => {
   }
 };
 
-export const deleteLog = async (date) => {
+export const deleteLog = async (id) => {
   // Update local storage instantly for offline support
   const storedLogs = JSON.parse(localStorage.getItem('cc_chicken_logs_v2') || '[]');
-  const newLogs = storedLogs.filter(l => l.date !== date);
+  const newLogs = storedLogs.filter(l => l.id !== id);
   localStorage.setItem('cc_chicken_logs_v2', JSON.stringify(newLogs));
 
   // Push to Google Sheets
   try {
     await fetch(SCRIPT_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'DELETE_LOG', date }),
+      body: JSON.stringify({ action: 'DELETE_LOG', id }),
     });
   } catch (e) {
     console.error('Failed to delete log from Google Sheets', e);
@@ -85,6 +85,7 @@ export const savePars = async (pars) => {
 };
 
 export const getEmptyLog = (date) => ({
+  id: Date.now().toString() + Math.random().toString(36).substr(2, 5), // Unique ID
   date,
   eod: { sammy: '', og: '', grilled: '', tenders: '', thawingTenders: '', boxedTenders: '' },
   delivery: { dark: '', tenders: '' },

@@ -37,23 +37,22 @@ function App() {
     );
   }
 
-  // Find or create today's log (using findLast to avoid broken duplicates)
-  let todayLog = logs.findLast ? logs.findLast(l => l.date === todayDate) : [...logs].reverse().find(l => l.date === todayDate);
-  if (!todayLog && logs.length > 0) {
+  // Get today's log or create an empty one
+  let todayLog = logs.findLast ? logs.findLast(l => l.date === todayDate) : logs.slice().reverse().find(l => l.date === todayDate);
+  if (!todayLog) {
     todayLog = getEmptyLog(todayDate);
   }
 
   const handleUpdateLog = (updatedFields) => {
     let specificLog = {};
     setLogs(prev => {
-      // Find the last index to update the most recent entry
-      const existingIdx = prev.findLastIndex ? prev.findLastIndex(l => l.date === todayDate) : prev.map(l => l.date).lastIndexOf(todayDate);
+      const existingIdx = prev.findIndex(l => l.id === todayLog.id);
       let newLogs = [...prev];
       if (existingIdx >= 0) {
         specificLog = { ...newLogs[existingIdx], ...updatedFields, loggedBy: loggedUser };
         newLogs[existingIdx] = specificLog;
       } else {
-        specificLog = { ...getEmptyLog(todayDate), ...updatedFields, loggedBy: loggedUser };
+        specificLog = { ...todayLog, ...updatedFields, loggedBy: loggedUser };
         newLogs.push(specificLog);
       }
       return newLogs;
@@ -65,9 +64,9 @@ function App() {
     }
   };
 
-  const handleDeleteLog = (dateToDelete) => {
-    setLogs(prev => prev.filter(l => l.date !== dateToDelete));
-    deleteLog(dateToDelete);
+  const handleDeleteLog = (idToDelete) => {
+    setLogs(prev => prev.filter(l => l.id !== idToDelete));
+    deleteLog(idToDelete);
   };
 
   const handleUserChange = (e) => {

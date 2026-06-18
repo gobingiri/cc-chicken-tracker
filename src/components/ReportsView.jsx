@@ -183,7 +183,7 @@ function ReportsView({ logs, onDeleteLog }) {
                       style={{width: '30px', height: '30px', fontSize: '1rem', borderRadius: '4px', padding: 0}}
                       onClick={() => {
                         if (window.confirm(`Are you sure you want to permanently delete the log for ${log.date}? This will also delete it from the Google Sheet.`)) {
-                          onDeleteLog(log.date);
+                          onDeleteLog(log.id);
                         }
                       }}
                       title="Delete log"
