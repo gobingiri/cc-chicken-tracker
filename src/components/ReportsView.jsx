@@ -46,7 +46,7 @@ function ReportsView({ logs }) {
             <tr>
               <th>Date</th>
               <th colSpan="6" className="th-group group-eod">End of Day (Half Pans)</th>
-              <th colSpan="2" className="th-group group-del">Delivery (lbs)</th>
+              <th colSpan="2" className="th-group group-del">Delivery</th>
               <th colSpan="4" className="th-group group-prep">Prep (Half Pans)</th>
               <th colSpan="4" className="th-group group-waste">Waste (Half Pans)</th>
               <th colSpan="3" className="th-group group-oil">Oil Changes</th>
@@ -56,7 +56,7 @@ function ReportsView({ logs }) {
               {/* EoD */}
               <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th><th>Thaw</th><th>Boxed</th>
               {/* Delivery */}
-              <th>Dark</th><th>Tenders</th>
+              <th>Dark (lbs)</th><th>Tenders (boxes)</th>
               {/* Prep */}
               <th>Sammy</th><th>OG</th><th>Grilled</th><th>Tenders</th>
               {/* Waste */}

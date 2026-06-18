@@ -55,7 +55,7 @@ function PrepAndDeliveryView({ todayLog, onUpdateLog }) {
                 </div>
               </div>
               <div className="input-group">
-                <label>Tenders (lbs)</label>
+                <label>Tenders (Boxes)</label>
                 <div className="stepper-input">
                   <input 
                     type="number" 
