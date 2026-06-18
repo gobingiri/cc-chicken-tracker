@@ -10,9 +10,16 @@ function setup() {
       "del_dark", "del_tenders",
       "prep_sammy", "prep_og", "prep_grilled", "prep_tenders",
       "waste_sammy", "waste_og", "waste_grilled", "waste_tenders",
-      "oil_fries", "oil_left", "oil_right"
+      "oil_fries", "oil_left", "oil_right", "logged_by"
     ]);
-    logsSheet.getRange("A1:T1").setFontWeight("bold");
+    logsSheet.getRange("A1:U1").setFontWeight("bold");
+  } else {
+    // If Logs sheet exists, make sure the logged_by header is there
+    var lastHeader = logsSheet.getRange(1, 21).getValue();
+    if (lastHeader !== "logged_by") {
+      logsSheet.getRange(1, 21).setValue("logged_by");
+      logsSheet.getRange(1, 21).setFontWeight("bold");
+    }
   }
   
   // Setup Settings Sheet
@@ -52,7 +59,8 @@ function doGet(e) {
       delivery: { dark: row[7], tenders: row[8] },
       prep: { sammy: row[9], og: row[10], grilled: row[11], tenders: row[12] },
       waste: { sammy: row[13], og: row[14], grilled: row[15], tenders: row[16] },
-      oil: { fries: row[17] === true || row[17] === 'TRUE' || row[17] === 'true', leftChicken: row[18] === true || row[18] === 'TRUE' || row[18] === 'true', rightChicken: row[19] === true || row[19] === 'TRUE' || row[19] === 'true' }
+      oil: { fries: row[17] === true || row[17] === 'TRUE', leftChicken: row[18] === true || row[18] === 'TRUE', rightChicken: row[19] === true || row[19] === 'TRUE' },
+      loggedBy: row[20] || '' // Read loggedBy from column 21
     });
   }
   
@@ -103,11 +111,12 @@ function doPost(e) {
       l.delivery.dark, l.delivery.tenders,
       l.prep.sammy, l.prep.og, l.prep.grilled, l.prep.tenders,
       l.waste.sammy, l.waste.og, l.waste.grilled, l.waste.tenders,
-      l.oil.fries, l.oil.leftChicken, l.oil.rightChicken
+      l.oil.fries, l.oil.leftChicken, l.oil.rightChicken,
+      l.loggedBy || '' // Append loggedBy to column 21
     ];
     
     if (dateToRow !== -1) {
-      logsSheet.getRange(dateToRow, 1, 1, 20).setValues([rowData]);
+      logsSheet.getRange(dateToRow, 1, 1, 21).setValues([rowData]); // Update 21 columns
     } else {
       logsSheet.appendRow(rowData);
     }
@@ -117,7 +126,6 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify({ error: "Invalid action" })).setMimeType(ContentService.MimeType.JSON);
 }
 
-// Ensure CORS options request doesn't block fetch
 function doOptions(e) {
   var headers = {
     "Access-Control-Allow-Origin": "*",
