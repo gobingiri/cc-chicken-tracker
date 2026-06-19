@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 import DashboardView from './components/DashboardView';
 import LogCountsView from './components/LogCountsView';
-import ManagerSettingsView from './components/ManagerSettingsView';
 import PrepAndDeliveryView from './components/PrepAndDeliveryView';
 import ReportsView from './components/ReportsView';
+import ManagerSettingsView from './components/ManagerSettingsView';
+import OrderPlannerView from './components/OrderPlannerView';
 import { loadData, saveLog, deleteLog, savePars, getEmptyLog } from './utils/storage';
 import logo from './assets/logo.png';
 
@@ -111,19 +112,28 @@ function App() {
           <li className={`nav-item ${activeTab === 'prep' ? 'active' : ''}`} onClick={() => setActiveTab('prep')}>
             Prep & Delivery
           </li>
-          <li className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
-            Reports
-          </li>
-          <li className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
-            Manager Settings
-          </li>
         </ul>
+        <div style={{marginTop: '2rem'}}>
+          <h3 style={{color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Manager Actions</h3>
+          <ul className="nav-links">
+            <li className={`nav-item ${activeTab === 'order-planner' ? 'active' : ''}`} onClick={() => setActiveTab('order-planner')}>
+              📅 Order Planner
+            </li>
+            <li className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={() => setActiveTab('reports')}>
+              📊 Historical Reports
+            </li>
+            <li className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+              ⚙️ Settings
+            </li>
+          </ul>
+        </div>
       </aside>
 
       <main className="main-content">
         {activeTab === 'dashboard' && <DashboardView todayLog={latestLog} pars={pars} />}
         {activeTab === 'prep' && <PrepAndDeliveryView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
         {activeTab === 'counts' && <LogCountsView todayLog={todayLog} onUpdateLog={handleUpdateLog} />}
+        {activeTab === 'order-planner' && <OrderPlannerView latestLog={latestLog} />}
         {activeTab === 'reports' && <ReportsView logs={logs} onDeleteLog={handleDeleteLog} />}
         {activeTab === 'settings' && <ManagerSettingsView pars={pars} onUpdatePars={handleUpdatePars} />}
       </main>
